@@ -1,0 +1,14 @@
+html,body,#plane{
+ width: 100%;
+ height: 100%;
+ margin: 0;
+ padding: 0;
+}
+
+#plane .particle{
+ position: absolute;
+ width: 10px;
+ height: 10px;
+ background: red;
+ border-radius:  5px;
+}
