@@ -14,15 +14,49 @@ Library(
   this.domElement.id = id;
   document.body.appendChild(this.domElement);
   
-  this.particles = [];
   
-  this.addParticle = function(p){
-   if(!p instanceof Particle){
-    throw Error("Argument 1 does not impement Particle");
+ };
+ 
+ Canvas.prototype.particles = [];
+ 
+ 
+ 
+ /* * * *
+  * addParticle(particle)
+  * * * */
+ Canvas.prototype.addParticle = function(p){
+  if(!p instanceof Particle){
+   throw Error("Argument 1 does not impement Particle");
+  }
+  
+  this.particles.push(p);
+  this.domElement.appendChild(p.domElement);
+ }
+ 
+ 
+ 
+ /* * * *
+  * particles.forEachPair(itself, callback)
+  * * * */
+ Canvas.prototype.particles.forEachPair = function(x,f){
+  if(typeof x == "function"){
+   f = x;
+   x = false;
+  }
+  
+  var i = -1, j;
+  var l = this.length;
+  var a, b;
+  
+  while(++i<l){
+   a = this[i];
+   j = -1;
+   while(++j<l){
+    b = this[j];
+    if(a!==b||x){
+     f(a,b);
+    }
    }
-   
-   this.particles.push(p);
-   this.domElement.appendChild(p.domElement);
   }
  };
  
