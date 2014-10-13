@@ -87,7 +87,8 @@ window.Library = function(id,req,f){
  load(id,req,f,true);
 }
 
-window.Script = function(id,req,f){
+window.Script = function(req,f){
+ var id = Math.random();
  load(id,req,f,false);
 };
 

@@ -1,36 +1,44 @@
-window.addEventListener('load',function(){
+Script(
+ ['canvas','atom'],
+ function(){
+ 
+ console.log(window.Canvas,window.Atom);
  
  window.realTemperature = 1;
- window.temperature = 20;
+ window.temperature = NaN;
  
  var tempmeter = document.createElement('div');
  tempmeter.id = 'tempmeter';
  document.body.appendChild(tempmeter);
  
  var canvas = Canvas('plane');
- window.a = Particle(1,1);
+ 
+ window.a = Atom(1,1);
  a.pos.set(100,100);
- a.r = 10;
  a.domElement.style.background = "blue";
  canvas.addParticle(a);
  
- var i = 30;
- var b;
- while(i--){
-  b = Particle(1,1);
-  b.pos.set(1000*Math.random(),300*Math.random());
-  b.r = 10;
-  canvas.addParticle(b);
- }
+ window.b = Atom(1,1);
+ b.pos.set(500,200);
+ b.domElement.style.background = "red";
+ canvas.addParticle(b);
  
  function eachPair(a,b){
-  if(a.colides(b)){ console.log('bang!'); }
   
   var dist = a.dist(b);
   var dir  = a.dir(b);
   
-  a.applyForceA( -5000/(dist*dist*dist), dir );
-  b.applyForceA(  5000/(dist*dist*dist), dir );
+  a.applyForceA(  500/(dist*dist) - 5000/(dist*dist*dist), dir );
+  b.applyForceA( -500/(dist*dist) + 5000/(dist*dist*dist), dir );
+  
+  
+  if(a.colides(b)){
+   var avg = Vector(a.vel);
+   avg.add(b.vel);
+   avg.times(.5);
+   a.vel.set(avg);
+   b.vel.set(avg);
+  }
   
  };
  
@@ -42,13 +50,19 @@ window.addEventListener('load',function(){
    var mx = window.innerWidth;
    var my = window.innerHeight;
   
-  (a.pos.x < 0 ) && a.applyForce(  u, 0 );
-  (a.pos.x > mx) && a.applyForce( -u, 0 );
-  (a.pos.y < 0 ) && a.applyForce(  0, u );
-  (a.pos.y > my) && a.applyForce(  0,-u );
+  (a.pos.x < 0 ) && (a.vel.x =  Math.abs(a.vel.x));
+  (a.pos.x > mx) && (a.vel.x = -Math.abs(a.vel.x));
+  (a.pos.y < 0 ) && (a.vel.y =  Math.abs(a.vel.y));
+  (a.pos.y > my) && (a.vel.y = -Math.abs(a.vel.y));
   
-  var q = (50+temperature/realTemperature)/51;
+  var q = (50+temperature/20/a.vel.abs())/51;
   isNaN(q) || a.vel.times(q);
+  
+  //FIXME Temporary; add decay
+  if(a.vel.abs()>20){
+   a.vel.norm();
+   a.vel.times(20);
+  }
   
   
   a.tick();
@@ -61,9 +75,11 @@ window.addEventListener('load',function(){
   cotemp = 0;
   canvas.particles.forEachPair(eachPair);
   canvas.particles.forEach    (each    );
+  canvas.tick();
   
-  realTemperature = cotemp;
-  tempmeter.textContent = "T=" + (realTemperature|0) + "°";
+  //TODO real temperature http://goo.gl/IZZwuZ
+  realTemperature = cotemp/canvas.particles.length;
+  tempmeter.textContent = "T=" + (realTemperature*20|0) + "K";
  }
  
  setInterval(render,20);

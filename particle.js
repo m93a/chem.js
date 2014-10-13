@@ -13,16 +13,26 @@ Library(
   this.r = r>=1 ? r : 1;
   this.m = m>0  ? m : NaN;
   
-  this.pos = Vector(px||NaN, py||NaN);
-  this.vel = Vector(vx||0,   vy||0  );
+  if(
+   px!=undefined &&
+   py!=undefined
+  ){
+   this.pos = Vector(px, py);
+  }else{
+   this.pos = Vector(NaN,NaN);
+  }
+  
+  this.vel = Vector(vx||0, vy||0);
   
   this.force = Vector(0,0);
-  this.canvas = null;
   
   this.domElement = document.createElement('div');
   this.domElement.classList.add('particle');
   
  };
+ 
+ Particle.prototype.canvas    = null;
+ Particle.prototype.colisions = null;
  
  Particle.prototype.dist = function(p){
   return this.pos.dist(p.pos);
@@ -53,6 +63,8 @@ Library(
   
   this.domElement.style.left = this.pos.x+"px";
   this.domElement.style.top  = this.pos.y+"px";
+  
+  this.colisions = [];
  }
  
  

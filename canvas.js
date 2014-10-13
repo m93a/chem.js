@@ -14,12 +14,14 @@ Library(
   this.domElement.id = id;
   document.body.appendChild(this.domElement);
   
+  this.particles = Object.create(Canvas.prototype.particles);
+  
   
  };
  
+ 
+ 
  Canvas.prototype.particles = [];
- 
- 
  
  /* * * *
   * addParticle(particle)
@@ -60,6 +62,14 @@ Library(
   }
  };
  
+ 
+ Canvas.prototype.tick = function(){
+  this.particles.forEachPair(function(a,b){
+   
+   a.colisions && a.colides(b) && a.colisions.push(b);
+   
+  })
+ };
  
  
  window.Canvas = Canvas;
