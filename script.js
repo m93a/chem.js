@@ -11,25 +11,44 @@ Script(
  tempmeter.id = 'tempmeter';
  document.body.appendChild(tempmeter);
  
- var canvas = Canvas('plane');
+ window.canvas = Canvas('plane');
  
  window.a = Atom(1,1);
- a.pos.set(100,100);
+ a.pos.set(400,100);
  a.domElement.style.background = "blue";
  canvas.addParticle(a);
  
- window.b = Atom(1,1);
- b.pos.set(500,200);
- b.domElement.style.background = "red";
- canvas.addParticle(b);
+ var i = 10;
+ while(--i>0){
+  window.b = Atom(1,1);
+  b.pos.set(400*Math.random(),200*Math.random());
+  canvas.addParticle(b);
+  switch(Math.random()*5%5|0){
+   case 0:
+    b.domElement.style.background = "blue";
+    break;
+   case 1:
+    b.domElement.style.background = "red";
+    break;
+   case 2:
+    b.domElement.style.background = "yellow";
+    break;
+   case 3:
+    b.domElement.style.background = "green";
+    break;
+   case 4:
+    b.domElement.style.background = "grey";
+    break;
+  }
+ }
  
  function eachPair(a,b){
   
   var dist = a.dist(b);
   var dir  = a.dir(b);
   
-  a.applyForceA(  500/(dist*dist) - 5000/(dist*dist*dist), dir );
-  b.applyForceA( -500/(dist*dist) + 5000/(dist*dist*dist), dir );
+  a.applyForceA(  300/(dist*dist) - 5000/(dist*dist*dist), dir );
+  b.applyForceA( -300/(dist*dist) + 5000/(dist*dist*dist), dir );
   
   
   if(a.colides(b)){
@@ -50,10 +69,10 @@ Script(
    var mx = window.innerWidth;
    var my = window.innerHeight;
   
-  (a.pos.x < 0 ) && (a.vel.x =  Math.abs(a.vel.x));
-  (a.pos.x > mx) && (a.vel.x = -Math.abs(a.vel.x));
-  (a.pos.y < 0 ) && (a.vel.y =  Math.abs(a.vel.y));
-  (a.pos.y > my) && (a.vel.y = -Math.abs(a.vel.y));
+  (a.pos.x < 0 ) && (a.vel.x =  Math.abs(a.vel.x),a.pos.x=0 );
+  (a.pos.x > mx) && (a.vel.x = -Math.abs(a.vel.x),a.pos.x=mx);
+  (a.pos.y < 0 ) && (a.vel.y =  Math.abs(a.vel.y),a.pos.y=0 );
+  (a.pos.y > my) && (a.vel.y = -Math.abs(a.vel.y),a.pos.y=my);
   
   var q = (50+temperature/20/a.vel.abs())/51;
   isNaN(q) || a.vel.times(q);
