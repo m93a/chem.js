@@ -13,15 +13,15 @@ Script(
  
  window.canvas = Canvas('plane');
  
- window.a = Atom(1,1);
- a.pos.set(400,100);
- a.domElement.style.background = "blue";
- canvas.addParticle(a);
+ function click(e){
+  console.log((e.target.particle.colisions||[]).length);
+ }
  
- var i = 10;
- while(--i>0){
+ var i = 50;
+ while(i-->0){
   window.b = Atom(1,1);
-  b.pos.set(400*Math.random(),200*Math.random());
+  b.pos.set(800*Math.random(),500*Math.random());
+  b.domElement.addEventListener('click',click);
   canvas.addParticle(b);
   switch(Math.random()*5%5|0){
    case 0:
@@ -31,7 +31,7 @@ Script(
     b.domElement.style.background = "red";
     break;
    case 2:
-    b.domElement.style.background = "yellow";
+    b.domElement.style.background = "deepskyblue";
     break;
    case 3:
     b.domElement.style.background = "green";
@@ -47,8 +47,20 @@ Script(
   var dist = a.dist(b);
   var dir  = a.dir(b);
   
-  a.applyForceA(  300/(dist*dist) - 5000/(dist*dist*dist), dir );
-  b.applyForceA( -300/(dist*dist) + 5000/(dist*dist*dist), dir );
+  a.applyForceA( -5000/(dist*dist*dist), dir );
+  b.applyForceA(  5000/(dist*dist*dist), dir );
+  
+  
+  var colA = (a.colisions||[]);
+  var colB = (b.colisions||[]);
+  if(
+   (colA.length<1 || colA.indexOf(b)+1 && colA.length<2) &&
+   (colB.length<1 || colB.indexOf(a)+1 && colB.length<2)
+  ){
+   a.applyForceA(  300/(dist*dist), dir );
+   b.applyForceA( -300/(dist*dist), dir );
+  }
+  
   
   
   if(a.colides(b)){
@@ -81,6 +93,13 @@ Script(
   if(a.vel.abs()>20){
    a.vel.norm();
    a.vel.times(20);
+  }
+  
+  var colA = (a.colisions||[]);
+  if(colA.length<1 && colA.length<2){
+   a.domElement.style.background = "red";
+  }else{
+   a.domElement.style.background = "black";
   }
   
   

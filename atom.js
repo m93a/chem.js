@@ -4,6 +4,16 @@ Library(
  function(){
  
  
+ /*
+  i = j = 0;
+  while(i++<4){
+   k=4*(i/2|0)+j+2;
+   (i%2)&&(j+=k);
+   console.log(j);
+  }
+  k;
+ */
+ 
  var Atom = function(Z, X, px, py){
   if(!(this instanceof Atom)){
    return new Atom(Z, X, px, py);
@@ -30,6 +40,7 @@ Library(
   this.domElement = document.createElement('div');
   this.domElement.classList.add('particle');
   this.domElement.classList.add('atom'    );
+  this.domElement.particle = this;
   
  };
  

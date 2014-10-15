@@ -28,6 +28,7 @@ Library(
   
   this.domElement = document.createElement('div');
   this.domElement.classList.add('particle');
+  this.domElement.particle = this;
   
  };
  
